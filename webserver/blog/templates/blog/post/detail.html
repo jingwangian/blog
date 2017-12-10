@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% load blog_tags %}
+
+{% block title %}
+<h1 class="mt-4">{{ post.title }}</h1>
+<p class="date">Published {{ post.publish }} by {{ post.author }}</p>
+{% endblock %}
+
+{% block content %}
+    <!-- <br> -->
+    {{ post.body|markdown }}
+
+{% endblock %}

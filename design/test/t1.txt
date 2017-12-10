@@ -1,0 +1,42 @@
+##This is a post formatted with markdown
+
+Here is a list:
+* One
+* Two
+* Three
+***
+And a [link to the Django website](https://www.djangoproject.com/)
+
+1. Item 1
+2. Item 2
+3. Item three
+
+This is my first blog by using github+jekyll+markdown to finish it.
+My name is jingwang as a developer for PostgreSQL/C/Pyton/Web.
+
+## My favourt language
+
+* C
+* Python
+* Bash
+* HTML+CSS
+
+
+1.  This is a list item with two paragraphs. Lorem ipsum dolor
+    sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+    mi posuere lectus.
+
+    Vestibulum enim wisi, viverra nec, fringilla in, laoreet
+    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
+    sit amet velit.
+
+2.  Suspendisse id sem consectetuer libero luctus adipiscing.
+
+
+    `fjasd;fjasdfiwqeop`
+
+```sh
+$ cd dillinger
+$ npm install -d
+$ node app
+```

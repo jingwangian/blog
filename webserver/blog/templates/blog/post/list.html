@@ -15,7 +15,7 @@
                 {% if not forloop.last %}, {% endif %}
             {% endfor %}
         </p>
-        {{ post.body|markdown|truncatewords_html:30 }}
+        {{ post.body|mymarkdown|truncatewords_html:30 }}
         <hr>
     {% endfor %}
     

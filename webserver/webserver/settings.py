@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'blogdb',
         'USER': 'ian',
         'PASSWORD': '123456',
-        'HOST': 'ianpgdb.cnbir6ulmwhlabcd.ap-southeast-2.rds.amazonaws.com',
+        'HOST': 'ianpgdb.cnbir6ulmwhl.ap-southeast-2.rds.amazonaws.com',
         'PORT': '5432',
     },
     'default-sqlite3': {

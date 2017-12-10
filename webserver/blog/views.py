@@ -6,10 +6,18 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
+from django.http import JsonResponse,HttpResponse
+
 from taggit.models import Tag
+
+import markdown
+import codecs
 
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
+
+MARKDOWN_EXT = ('footnotes', 'attr_list', 'def_list', 'abbr','pymdownx.github', 'pymdownx.extrarawhtml')
+md = markdown.Markdown(extensions=MARKDOWN_EXT)
 
 @login_required(login_url='/admin/login/')
 def user_login(request):
@@ -21,6 +29,38 @@ def user_logout(request):
     logout(request)
     return redirect('/blog')
     # return HttpResponse('You have logout')
+
+@login_required(login_url='/admin/login/')
+def markdown_edit(request):
+    context = {'in_action':'hello',
+                'out_action':'hello world',
+                'html_head': 'html_head',
+                'vim_mode': False,
+                'markdown_input':'markdown_input'}
+                
+    return render(request, 'blog/post/markdown_edit.html', context)
+
+def ajax_preview(request):
+    print('request -->:', request)
+    if request.method == 'POST':
+        post_content = request.POST
+        print('post_content -->:', post_content)
+        print('body-->:',request.body)
+        print('content-type:',request.content_type)
+
+        input_text = request.body.decode()
+
+        # mid_text = codecs.getreader('utf8')(input_text).read()
+
+        output_text = md.reset().convert(input_text)
+
+        print('input_text -->',input_text)
+        # print('mid_text -->',mid_text)
+        print('output_text -->',output_text)
+
+        return HttpResponse(output_text)
+    else:
+        return HttpResponse('Error: request mothod is not Post')
 
 def post_list(request, tag_slug=None):
     object_list = Post.published.all()

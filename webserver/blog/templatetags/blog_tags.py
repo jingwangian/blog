@@ -24,7 +24,7 @@ def show_latest_posts(count=5):
 #     ).order_by('-total_comments')[:count]
 
 
-@register.filter(name='markdown')
+@register.filter(name='mymarkdown')
 def markdown_format(text):
     options = {'input': None, 'term_action': 'e', 'port': 8222, 'output': None, 'safe_mode': False, 'extensions': ['footnotes', 'attr_list', 'def_list', 'abbr', 'pymdownx.github', 'pymdownx.extrarawhtml'], 'encoding': None, 'output_format': 'xhtml1', 'lazy_ol': True}
 

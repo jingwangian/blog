@@ -14,10 +14,17 @@ urlpatterns = [
         views.post_detail,
         name='post_detail'),
     url(r'^(?P<post_id>\d+)/share/$', views.post_share, name='post_share'),
+
+    # blog/create_new_post
+    url(r'^create_new_post/$', views.create_new_post, name='create_new_post'),
+
+    # blog/post_update
+    url(r'^post_update/(?P<slug>[-\w]+)/$', views.post_update, name='post_update'),
+
     # blog/markdown_edit
-    url(r'^markdown_edit$', views.markdown_edit, name='markdown_edit'),
+    url(r'^markdown_edit/$', views.markdown_edit, name='markdown_edit'),
 
     # blog/ajax/preview
     url(r'^ajax/preview$', views.ajax_preview, name='ajax_preview'),
-    
+
 ]

@@ -25,24 +25,22 @@
     </head>
 
     <body style="background-color: rgb(204, 204, 204);">
-        <form class="form-horizontal" method="post" action="/" name="markdown_input">
+        <form class="form-horizontal" method="post" action="{% url  'blog:markdown_edit' %}" name="markdown_input">
         {% csrf_token %}
-        <div style="position:fixed; top:0; bottom:0; left:0; right:0">
-        
-        <div style="margin-top:15px; margin-left:15px; margin-right:15px" id="head">{{ html_head }}</div>
+        <!-- <div style="position:fixed; top:0; bottom:0; left:0; right:0"> -->
+
+        <!-- <div style="margin-top:15px; margin-left:15px; margin-right:15px" id="head">{{ html_head }}</div> -->
 
         <div id="mdedit" style="position: absolute; height:40px; width:100%; top:0;" class="row">
             <div class="col-sm-6">
-                <div style="margin:15px"  class="btn-toolbar"><div class="btn-group btn-group-sm">{{ in_actions }}</div>
-                <div class="checkbox">
-                    <label>
-                      <input id="vim-mode-toggle" name="vim_mode" style="margin-left:0px;" type="checkbox" onchange="toggleVimMode(this)" {{ vim_mode }} />&nbsp;Vim mode
-                    </label>
-                </div></div>
+                <div style="margin:15px"  class="btn-toolbar">
+                    <input type="title" class="form-horizontal" id="title" name="title" placeholder="title" value="{{ title }}">
+                    <!-- <input type="slug" class="form-horizontal" id="slug" name="slug" placeholder=""> -->
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <a href="{% url "blog:post_list" %}" class="btn btn-default">Cancel</a>
+                </div>
             </div>
-            <div style="padding-left:0px" class="col-sm-6">
-                <div style="margin:15px" class="btn-toolbar"><div class="btn-group btn-group-sm">{{ out_actions }}</div></div>
-            </div>
+
         </div>
 
         <div id="mdedit-body" style="padding:15px; position: absolute; top:0; bottom:0; left:0; right:0" class="row">
@@ -53,7 +51,7 @@
                 <div class="html-output markdown-body" id="html_result" style="overflow: auto; height:100%"></div>
             </div>
         </div>
-        </div>
+        <!-- </div> -->
         </form>
 
         <div class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
@@ -70,6 +68,5 @@
             </div>
           </div>
         </div>
-
     </body>
 </html>

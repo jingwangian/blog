@@ -29,7 +29,9 @@
     </div>
     <ul class="nav navbar-nav navbar-right">
       <li class="active"><a href="{%url 'blog:post_list'%}">Home</a></li>
-      <li><a href="{%url 'blog:markdown_edit'%}">Editor</a></li>
+      {% if user_login == 1 %}
+      <li><a href="{%url 'blog:create_new_post' %}">New</a></li>
+      {% endif %}
       <li><a href="#">About me</a></li>
 
       {% if user_login == 1 %}
@@ -57,7 +59,7 @@
 	        {% block content %}
 	        {% endblock %}
           <hr>
-         
+
     </div>
     <!-- Sidebar Widgets Column -->
     <div class="col-md-3">
@@ -71,6 +73,11 @@
                   <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
               </div>
+              <br>
+              {% if user_login == 1 and is_detail %}
+              <a href="{% url "blog:post_update" post.slug %}" class="btn btn-default">Modify</a>
+              {% endif %}
+
             </div>
 
             <br>

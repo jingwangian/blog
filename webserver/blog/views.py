@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse, HttpResponse
 
 from taggit.models import Tag
 
@@ -16,8 +16,9 @@ import codecs
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
 
-MARKDOWN_EXT = ('footnotes', 'attr_list', 'def_list', 'abbr','pymdownx.github', 'pymdownx.extrarawhtml')
+MARKDOWN_EXT = ('footnotes', 'attr_list', 'def_list', 'abbr', 'pymdownx.github', 'pymdownx.extrarawhtml')
 md = markdown.Markdown(extensions=MARKDOWN_EXT)
+
 
 @login_required(login_url='/admin/login/')
 def user_login(request):
@@ -30,23 +31,73 @@ def user_logout(request):
     return redirect('/blog')
     # return HttpResponse('You have logout')
 
+
 @login_required(login_url='/admin/login/')
-def markdown_edit(request):
-    context = {'in_action':'hello',
-                'out_action':'hello world',
-                'html_head': 'html_head',
-                'vim_mode': False,
-                'markdown_input':'markdown_input'}
-                
-    return render(request, 'blog/post/markdown_edit.html', context)
+def create_new_post(request):
+    return markdown_edit(request)
+
+
+def markdown_edit(request, title=''):
+    markdown_input = ''
+    if request.method == 'GET':
+        if len(title) > 0:
+            object_list = Post.objects.filter(title=title)
+            if len(object_list) > 0:
+                post = object_list[0]
+                markdown_input = post.body
+
+        context = {'in_actions': 'save',
+                   'out_actions': 'preview',
+                   'html_head': 'html_head',
+                   'vim_mode': False,
+                   'title': title,
+                   'markdown_input': markdown_input}
+
+        return render(request, 'blog/post/markdown_edit.html', context)
+    elif request.method == 'POST':
+        post_content = request.POST
+
+        title = request.POST.get('title')
+        # slug = request.POST.get('slug')
+        slug = title.replace(' ', '-')
+        body_text = request.POST.get('markdown_text')
+
+        # print('title -->', title)
+        # print('slug -->', slug)
+        # print('body_text -->', body_text)
+
+        if len(title) == 0:
+            return HttpResponse('title should not empty!')
+
+        # Save the text into datbase
+        save_text_into_database(request, title, slug, body_text)
+        return HttpResponse('Submit successfully!')
+
+
+def save_text_into_database(request, title, slug, body_text):
+    object_list = Post.objects.filter(title=title)
+
+    print('object_list --->', object_list)
+
+    if len(object_list) == 0:
+        print('new topic')
+        post = Post(title=title, slug=slug, body=body_text, author=request.user, status='published')
+
+        post.save()
+    else:
+        post = object_list[0]
+        post.body = body_text
+        post.save()
+        print('old topic')
+
 
 def ajax_preview(request):
     print('request -->:', request)
     if request.method == 'POST':
         post_content = request.POST
-        print('post_content -->:', post_content)
-        print('body-->:',request.body)
-        print('content-type:',request.content_type)
+        # print('post_content -->:', post_content)
+        # print('body-->:', request.body)
+        # print('content-type:', request.content_type)
 
         input_text = request.body.decode()
 
@@ -54,15 +105,23 @@ def ajax_preview(request):
 
         output_text = md.reset().convert(input_text)
 
-        print('input_text -->',input_text)
+        # print('input_text -->',input_text)
         # print('mid_text -->',mid_text)
-        print('output_text -->',output_text)
+        # print('output_text -->',output_text)
 
         return HttpResponse(output_text)
     else:
         return HttpResponse('Error: request mothod is not Post')
 
+
 def post_list(request, tag_slug=None):
+    user_name = 'None'
+    if not request.user.is_authenticated:
+        user_login = 0
+    else:
+        user_login = 1
+        user_name = request.user.username
+
     object_list = Post.published.all()
     tag = None
 
@@ -70,7 +129,7 @@ def post_list(request, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
 
-    paginator = Paginator(object_list, 3) # 3 posts in each page
+    paginator = Paginator(object_list, 3)  # 3 posts in each page
     page = request.GET.get('page')
     try:
         posts = paginator.page(page)
@@ -81,11 +140,13 @@ def post_list(request, tag_slug=None):
         # If page is out of range deliver last page of results
         posts = paginator.page(paginator.num_pages)
 
-    context = {'user_login':0,
-                'page': page,
-                'posts': posts,
-                'tag': tag}
+    context = {'user_login': user_login,
+               'page': page,
+               'posts': posts,
+               'tag': tag,
+               'is_detail': False}
     return render(request, 'blog/post/list.html', context)
+
 
 class PostListView(ListView):
     queryset = Post.published.all()
@@ -95,11 +156,18 @@ class PostListView(ListView):
 
 
 def post_detail(request, year, month, day, post):
+    user_name = 'None'
+    if not request.user.is_authenticated:
+        user_login = 0
+    else:
+        user_login = 1
+        user_name = request.user.username
+
     post = get_object_or_404(Post, slug=post,
-                                   status='published',
-                                   publish__year=year,
-                                   publish__month=month,
-                                   publish__day=day)
+                             status='published',
+                             publish__year=year,
+                             publish__month=month,
+                             publish__day=day)
 
     # List of active comments for this post
     comments = post.comments.filter(active=True)
@@ -117,13 +185,33 @@ def post_detail(request, year, month, day, post):
     else:
         comment_form = CommentForm()
 
-    context = {'user_login':1,
-                'post': post,
-                'comments': comments,
-                'comment_form': comment_form,
-                'similar_posts': None}
+    context = {'user_login': user_login,
+               'post': post,
+               'is_detail': True,
+               'comments': comments,
+               'comment_form': comment_form,
+               'similar_posts': None}
 
     return render(request, 'blog/post/detail.html', context)
+
+
+@login_required(login_url='/admin/login/')
+def post_update(request, slug):
+    '''
+    Updated the existing post text
+    '''
+    user_name = 'None'
+    if not request.user.is_authenticated:
+        user_login = 0
+    else:
+        user_login = 1
+        user_name = request.user.username
+
+    post = get_object_or_404(Post, slug=slug)
+
+    print('post.title is ', post.title)
+
+    return markdown_edit(request, post.title)
 
 
 def post_share(request, post_id):

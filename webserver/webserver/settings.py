@@ -88,6 +88,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blogdb',
+        'USER': 'wangj',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '27500',
+    },
+    'default-remote': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blogdb',
         'USER': 'ian',
         'PASSWORD': '123456',
         'HOST': 'ianpgdb.cnbir6ulmwhl.ap-southeast-2.rds.amazonaws.com',

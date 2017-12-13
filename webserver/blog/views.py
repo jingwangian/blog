@@ -105,9 +105,8 @@ def ajax_preview(request):
 
         output_text = md.reset().convert(input_text)
 
-        # print('input_text -->',input_text)
-        # print('mid_text -->',mid_text)
-        # print('output_text -->',output_text)
+        # print('input_text -->', input_text)
+        # print('output_text -->', output_text)
 
         return HttpResponse(output_text)
     else:

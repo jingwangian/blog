@@ -39,11 +39,11 @@ function tryAjaxUpdatePreview() {
         }});
     }
 }
-function ajaxSaveFile() {
-   $('#pleaseWaitDialog').modal('show')
-   $.post( "/ajax/save", myCodeMirror.getValue())
-        .done(function(data) {$('#pleaseWaitDialog').modal('hide')});
-}
+// function ajaxSaveFile() {
+//    $('#pleaseWaitDialog').modal('show')
+//    $.post( "/ajax/save", myCodeMirror.getValue())
+//         .done(function(data) {$('#pleaseWaitDialog').modal('hide')});
+// }
 function ajaxVimMode(value) {
     $.ajax({
         type: "POST",
@@ -76,7 +76,7 @@ $(document).ready(function() {
     $('#mdedit-body').css('top', (head_height+$('#mdedit').height())+'px');
 
     // Setup CodeMirror for markdown input
-    CodeMirror.commands.save = function(instance) {ajaxSaveFile();}
+    //CodeMirror.commands.save = function(instance) {ajaxSaveFile();}
 
     var close_button = $('input[ value = "Close"]');
     if (close_button) {

@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'webserver.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default-local': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blogdb',
         'USER': 'wangj',
@@ -93,11 +93,11 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '27500',
     },
-    'default-remote': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blogdb',
         'USER': 'ian',
-        'PASSWORD': '123456',
+        'PASSWORD': 'USwj1976',
         'HOST': 'ianpgdb.cnbir6ulmwhl.ap-southeast-2.rds.amazonaws.com',
         'PORT': '5432',
     },

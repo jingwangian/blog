@@ -12,8 +12,10 @@ from taggit.models import Tag
 
 import markdown
 import codecs
+import datetime
 
 from .models import Post, Comment
+from .models import VisitorStat, TitleStat
 from .forms import EmailPostForm, CommentForm
 
 MARKDOWN_EXT = ('footnotes', 'attr_list', 'def_list', 'abbr', 'pymdownx.github', 'pymdownx.extrarawhtml')
@@ -77,10 +79,10 @@ def markdown_edit(request, title=''):
 def save_text_into_database(request, title, slug, body_text):
     object_list = Post.objects.filter(title=title)
 
-    print('object_list --->', object_list)
+    # print('object_list --->', object_list)
 
     if len(object_list) == 0:
-        print('new topic')
+        # print('new topic')
         post = Post(title=title, slug=slug, body=body_text, author=request.user, status='published')
 
         post.save()
@@ -88,7 +90,7 @@ def save_text_into_database(request, title, slug, body_text):
         post = object_list[0]
         post.body = body_text
         post.save()
-        print('old topic')
+        # print('old topic')
 
 
 def ajax_preview(request):
@@ -155,6 +157,44 @@ class PostListView(ListView):
 
 
 def post_detail(request, year, month, day, post):
+    meta_dict = request.META
+    client_addr = 'unknown'
+    user_agent = 'unknown'
+    http_referer = 'unknown'
+    request_path = 'unknown'
+    last_visit_date = datetime.datetime.today()
+
+    try:
+        client_addr = meta_dict.get('REMOTE_ADDR', 'unknown').strip()
+        user_agent = meta_dict.get('HTTP_USER_AGENT', 'unknown').strip()
+        http_referer = meta_dict.get('HTTP_REFERER', 'unknown').strip()
+        request_path = HttpRequest.path.strip()
+    except KeyError:
+        pass
+    except Exception as e:
+        print("Error in post_detail --> {}".format(e))
+
+    # print('client_addr')
+
+    object_list = VisitorStat.objects.filter(ip_addr=client_addr)
+    # visitor_object
+    if len(object_list) == 0:
+        obj = VisitorStat(ip_addr=client_addr,
+                          user_agent=user_agent,
+                          referrer=http_referer,
+                          total_visit_count=1,
+                          today_visit_count=1,
+                          last_visit_date=last_visit_date)
+    else:
+        obj = object_list[0]
+        obj.user_agent = user_agent
+        obj.referrer = http_referer
+        obj.total_visit_count += 1
+        obj.today_visit_count += 1
+        obj.last_visit_date = last_visit_date
+
+    obj.save()
+
     user_name = 'None'
     if not request.user.is_authenticated:
         user_login = 0
@@ -167,6 +207,21 @@ def post_detail(request, year, month, day, post):
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
+
+    title_object_list = TitleStat.objects.filter(title=post.title)
+    if len(title_object_list) == 0:
+        title_obj = TitleStat(title=post.title,
+                              request_path=request_path,
+                              total_visit_count=1,
+                              today_visit_count=1,
+                              last_visit_date=last_visit_date)
+    else:
+        title_obj = title_object_list[0]
+        title_obj.total_visit_count += 1
+        title_obj.today_visit_count += 1
+        title_obj.last_visit_date = last_visit_date
+
+    title_obj.save()
 
     # List of active comments for this post
     comments = post.comments.filter(active=True)

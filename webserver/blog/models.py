@@ -24,8 +24,8 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published')
 
-    objects = models.Manager() # The default manager.
-    published = PublishedManager() # The Dahl-specific manager.
+    objects = models.Manager()  # The default manager.
+    published = PublishedManager()  # The Dahl-specific manager.
 
     tags = TaggableManager()
 
@@ -56,3 +56,36 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment by {} on {}'.format(self.name, self.post)
+
+# Statistic visit times by client address
+
+
+class VisitorStat(models.Model):
+    ip_addr = models.CharField(max_length=60, db_index=True)
+    user_agent = models.CharField(max_length=255)
+    referrer = models.CharField(max_length=255)
+    total_visit_count = models.IntegerField()
+    today_visit_count = models.IntegerField()
+    last_visit_date = models.DateTimeField()
+
+    def __str__(self):
+        return '{}---{}---{}---{}'.format(self.ip_addr,
+                                       self.total_visit_count,
+                                       self.today_visit_count,
+                                       self.last_visit_date)
+
+# Statistic visit times by title
+
+
+class TitleStat(models.Model):
+    title = models.CharField(max_length=250, db_index=True)
+    request_path = models.CharField(max_length=255)
+    total_visit_count = models.IntegerField()
+    today_visit_count = models.IntegerField()
+    last_visit_date = models.DateTimeField()
+
+    def __str__(self):
+        return '{}---{}---{}---{}'.format(self.title,
+                                       self.total_visit_count,
+                                       self.today_visit_count,
+                                       self.last_visit_date)

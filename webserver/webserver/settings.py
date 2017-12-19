@@ -97,7 +97,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blogdb',
         'USER': 'ian',
-        'PASSWORD': 'USwj1976',
+        'PASSWORD': '123456',
         'HOST': 'ianpgdb.cnbir6ulmwhl.ap-southeast-2.rds.amazonaws.com',
         'PORT': '5432',
     },

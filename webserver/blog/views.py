@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.utils import timezone
 
 from django.http import JsonResponse, HttpResponse
 
@@ -12,7 +13,6 @@ from taggit.models import Tag
 
 import markdown
 import codecs
-import datetime
 
 from .models import Post, Comment
 from .models import VisitorStat, TitleStat
@@ -162,13 +162,13 @@ def post_detail(request, year, month, day, post):
     user_agent = 'unknown'
     http_referer = 'unknown'
     request_path = 'unknown'
-    last_visit_date = datetime.datetime.today()
+    last_visit_date = timezone.now()
 
     try:
         client_addr = meta_dict.get('REMOTE_ADDR', 'unknown').strip()
         user_agent = meta_dict.get('HTTP_USER_AGENT', 'unknown').strip()
         http_referer = meta_dict.get('HTTP_REFERER', 'unknown').strip()
-        request_path = HttpRequest.path.strip()
+        request_path = request.path.strip()
     except KeyError:
         pass
     except Exception as e:

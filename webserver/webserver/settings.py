@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import webserver.db as db
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -93,20 +94,12 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '27500',
     },
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blogdb',
-        'USER': 'ian',
-        'PASSWORD': '123456',
-        'HOST': 'ianpgdb.cnbir6ulmwhl.ap-southeast-2.rds.amazonaws.com',
-        'PORT': '5432',
-    },
     'default-sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+DATABASES['default'] = db.aws_postgres
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

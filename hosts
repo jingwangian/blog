@@ -1,0 +1,31 @@
+[ub1]
+54.153.200.37 ansible_python_interpreter=/usr/bin/python3
+
+[ub2]
+54.153.197.142  ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+
+[ub3]
+54.206.127.206 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+
+[all]
+54.153.200.37 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+54.153.197.142 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+54.206.127.206 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+54.206.97.101 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+13.54.108.87 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+13.210.12.197 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+54.206.122.70 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+13.210.25.163 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+52.62.176.146 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+13.54.97.239 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+13.210.12.197 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+
+[ub6a]
+13.210.12.197 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+
+[web]
+54.153.197.142  ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+
+[blog]
+ub10 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3
+#13.54.97.239 ansible_user=wangj ansible_python_interpreter=/usr/bin/python3

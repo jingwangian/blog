@@ -1,0 +1,15 @@
+---
+- hosts: blog
+  remote_user: wangj
+  vars:
+    src_dir: webserver
+    remote_dir: /db/webserver
+  tasks:
+#  - name: copy main.py file
+#    copy: src={{src_dir}}/main.py dest={{remote_dir}}/main.py mode="ug+rwx"
+
+#  - name: copy settings.py file
+#    copy: src={{src_dir}}/settings.py dest={{remote_dir}}/settings.py mode="ug+rwx"
+    - synchronize:
+        src: webserver/
+        dest: /db/webserver

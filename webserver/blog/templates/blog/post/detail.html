@@ -1,6 +1,14 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
 
+{% block head_block %}
+<!-- This tag provides a short description of the page. In some situations this description is used as a part of the snippet shown in the search results. -->
+<meta name="description" content="{{ page_description }}" />
+<title>
+{{ post.title }}
+</title>
+{% endblock %}
+
 {% block title %}
 <h1 class="mt-4">{{ post.title }}</h1>
 <p class="date">Published at {{ post.publish }}</p>
